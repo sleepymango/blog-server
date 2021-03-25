@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mariadb://112.74.188.126:3306/blog?characterEncoding=utf-8&useSSL=false&useTimezone=true
+    username: sleepymango
+    password: 123456
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 10
+      max-wait: 50000
+      validation-query: "SELECT 1"    #验证连接是否可用，使用的SQL语句
+      test-while-idle: true   #指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.
+      test-on-borrow: false  #false表示每次从连接池中取出连接时，不需要执行validationQuery = "SELECT 1" 中的SQL进行测试
+
+  jpa:
+    show-sql: true
+    hibernate:
+#      第一次加载hibernate时根据model类会自动建立起表的结构（前提是先建立好数据库），
+#     以后加载hibernate时根据 model类自动更新表结构，即使表结构改变了但表中的行仍然存在不会删除以前的行。
+#     要注意的是当部署到服务器后，表结构是不会被马上建立起来的，是要等 应用第一次运行起来后才会。
+      ddl-auto: update
+    open-in-view: true  #延时加载(懒加载)时控制Session的生命周期
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+
