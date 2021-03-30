@@ -8,6 +8,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.sleepymango.blog.annotation.PassVerifyToken;
 import com.sleepymango.blog.annotation.VerifyToken;
 import com.sleepymango.blog.entity.User;
+import com.sleepymango.blog.exception.AuthorizationException;
 import com.sleepymango.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
- * @Description TODO
+ * @Description jwt拦截器
  * @Author sleepymango
  * @Date 2021/3/25 21:59
  **/
@@ -30,7 +31,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
-        String token = request.getHeader("token");
+        String token = request.getHeader("Authorization");
         // 如果不是映射方法则放行
         if(!(object instanceof HandlerMethod)){
             return true;
@@ -54,26 +55,26 @@ public class JwtInterceptor implements HandlerInterceptor {
             }
 
             if (null==token){
-                throw new RuntimeException("token is null, 重新登录");
+                throw new AuthorizationException("token is null, 重新登录");
             }
             // 从token中获取ID
             String userId;
             try {
                 userId = JWT.decode(token).getAudience().get(0);
             } catch (JWTDecodeException e) {
-                throw new RuntimeException("token解析异常");
+                throw new AuthorizationException("token解析异常");
             }
             // 用户是否存在
             User user = userService.findById(Long.valueOf(userId));
             if (null==user){
-                throw new RuntimeException("用户不存在");
+                throw new AuthorizationException("用户不存在");
             }
             // 验证是否是该用户
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getUserPass())).build();
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
             try {
                 jwtVerifier.verify(token);
             } catch (JWTVerificationException e) {
-                throw new RuntimeException("token验证失败");
+                throw new AuthorizationException("token验证失败");
             }
             return true;
         }

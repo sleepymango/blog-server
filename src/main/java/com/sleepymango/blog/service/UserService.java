@@ -9,9 +9,16 @@ import com.sleepymango.blog.entity.User;
  */
 public interface UserService {
     /**
-     * 通过userId查找用户
+     * 通过用户ID查找用户
      * @param userId
      * @return
      */
     User findById(Long userId);
+
+    /**
+     * 通过用户名查找用户
+     * @param userLogin
+     * @return
+     */
+    User findByUsername(String userLogin);
 }

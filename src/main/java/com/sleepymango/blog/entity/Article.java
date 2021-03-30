@@ -6,20 +6,21 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
- * @Description
- * @Author sleepymango
- * @Date 2021-03-23 17:28:36
+ * @Description  
+ * @Author  linmengmeng
+ * @Date 2021-03-31 01:07:11 
  */
 
 @Entity
 @Data
 @ToString
-@Table(name = "article")
-public class Article implements Serializable {
+@Table ( name ="article")
+public class Article  implements Serializable {
 
-    private static final long serialVersionUID = 2628365592322942349L;
+    private static final long serialVersionUID = 6479207600191544602L;
 
     /**
      * 文章ID
@@ -27,72 +28,79 @@ public class Article implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_id")
-    private Long articleId;
+    private Long id;
 
     /**
      * 文章标题
      */
     @Column(name = "article_title")
-    private String articleTitle;
+    private String title;
 
     /**
      * 文章内容
      */
     @Column(name = "article_content")
-    private String articleContent;
+    private String content;
 
     /**
      * 文章封面
      */
     @Column(name = "article_banner")
-    private String articleBanner;
-
-    /**
-     * 文章标签
-     */
-    @Column(name = "article_tag")
-    private String articleTag;
+    private String banner;
 
     /**
      * 浏览量
      */
     @Column(name = "article_view")
-    private Long articleView;
+    private Long view;
 
     /**
      * 评论数
      */
     @Column(name = "article_comment")
-    private Long articleComment;
+    private Long comment;
 
     /**
      * 点赞数
      */
     @Column(name = "article_like")
-    private Long articleLike;
+    private Long like;
 
     /**
      * 发布时间
      */
     @Column(name = "article_publish")
-    private Date articlePublish;
+    private Date publish;
 
     /**
      * 文章状态 "0"删除 ”1“正常
      */
     @Column(name = "article_status")
-    private String articleStatus;
+    private String status;
 
     /**
-     * 关联的发布用户ID
+     * 作者，optional=false,表示author不能为空。删除文章，不影响用户
      */
-    @OneToOne
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User author;
 
     /**
-     * 分类ID
+     * 文章分类，被维护方
      */
-    @Column(name = "category_id")
-    private Long categoryId;
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    /**
+     * 文章标签, article为主表
+     */
+    @ManyToMany
+    private List<Label> labels;
+
+    /**
+     * 文章评论
+     */
+    @OneToMany(mappedBy = "article",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<Comment> comments;
 }

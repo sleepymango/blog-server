@@ -14,8 +14,8 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Result<T> implements Serializable {
-    private String status;
+public class Result implements Serializable {
+    private int status;
     private String message;
-    private T data;
+    private Object data;
 }

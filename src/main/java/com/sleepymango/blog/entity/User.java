@@ -6,11 +6,13 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
- * @Description
- * @Author sleepymango
- * @Date 2021-03-23 17:53:44
+ * @ClassName: User
+ * @Description:
+ * @Author: sleepymango
+ * @Date: 2021-03-28 20:25:40
  */
 
 @Entity
@@ -19,61 +21,76 @@ import java.util.Date;
 @Table(name = "user")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 490842700338594450L;
+    private static final long serialVersionUID = 1845302188817185889L;
 
     /**
      * 用户ID
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 自定义主键生成策略，IDENTITY 主键由数据库生成
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
 
     /**
      * 用户登录名
      */
-    @Column(name = "user_login")
-    private String userLogin;
+    @Column(name = "username")
+    private String username;
 
     /**
      * 用户密码
      */
-    @Column(name = "user_pass")
-    private String userPass;
+    @Column(name = "password")
+    private String password;
 
     /**
      * 用户邮箱
      */
-    @Column(name = "user_email")
-    private String userEmail;
+    @Column(name = "email")
+    private String email;
 
     /**
      * 用户昵称
      */
-    @Column(name = "user_nickname")
-    private String userNickname;
+    @Column(name = "nickname")
+    private String nickname;
 
     /**
      * 注册时间
      */
-    @Column(name = "user_registered")
-    private Date userRegistered;
+    @Column(name = "registered")
+    private Date registered;
 
     /**
      * 用户头像
      */
-    @Column(name = "user_avatar")
-    private String userAvatar;
+    @Column(name = "avatar")
+    private String avatar;
 
     /**
      * 用户IP
      */
-    @Column(name = "user_ip")
-    private String userIp;
+    @Column(name = "ip")
+    private String ip;
 
     /**
      * 用户状态 "0"删除 ”1“正常
      */
-    @Column(name = "user_status")
-    private Long userStatus;
+    @Column(name = "status")
+    private Long status;
+
+    /**
+     * //级联保存、更新、删除、刷新;延迟加载。当删除用户，会级联删除该用户的所有文章
+     * //拥有mappedBy注解的实体类为关系被维护端
+     * //mappedBy="author"中的author是Article中的author属性
+     */
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Article> articles;
+
+    /**
+     * 用户评论
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments;
+
 }
