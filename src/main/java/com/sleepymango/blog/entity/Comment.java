@@ -58,7 +58,7 @@ public class Comment  implements Serializable {
 	private Comment parent;
 
 	/**
-	 * 子评论 ，关系维护方 one
+	 * 子评论 ，mappedBy关系被维护方 one
 	 */
 	@OneToMany(mappedBy = "parent",cascade = CascadeType.ALL)
 	private List<Comment> children;

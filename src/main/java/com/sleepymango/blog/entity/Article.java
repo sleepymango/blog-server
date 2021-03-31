@@ -86,7 +86,7 @@ public class Article  implements Serializable {
     private User author;
 
     /**
-     * 文章分类，被维护方
+     * 文章分类，维护方
      */
     @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "category_id")
