@@ -14,10 +14,9 @@ import java.util.List;
  * @Author: sleepymango
  * @Date: 2021-03-29 23:19:20
  */
-
 @Entity
 @Data
-@ToString(exclude = "parent") // 需要排除父或子项属性，否则会栈溢出报错
+@ToString
 @Table(name = "menu")
 public class Menu implements Serializable {
 
@@ -44,13 +43,7 @@ public class Menu implements Serializable {
     private String url;
 
     /**
-     * 菜单状态
-     */
-    @Column(name = "menu_status")
-    private int status;
-
-    /**
-     * 父菜单,option默认为true，允许为null，  @JsonIgnore // 防止无限循环
+     * 父菜单,option默认为true，允许为null, CascadeType.PERSIST 表示 多方保存时级联一方 序列化多方的时候忽略parent
      */
     @JsonIgnore
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})

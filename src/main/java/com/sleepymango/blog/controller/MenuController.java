@@ -25,8 +25,8 @@ public class MenuController {
      *
      */
     @GetMapping("/menus")
-    public Result findMenus() {
-        List<Menu> menuList = menuService.findMenus();
+    public Result findAll() {
+        List<Menu> menuList = menuService.findAll();
         return new Result(ResultEnum.SUCCESS.getStatusCode(), ResultEnum.SUCCESS.getMessage(), menuList);
     }
 

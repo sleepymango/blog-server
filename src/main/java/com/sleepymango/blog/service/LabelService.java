@@ -1,5 +1,9 @@
 package com.sleepymango.blog.service;
 
+import com.sleepymango.blog.entity.Label;
+
+import java.util.List;
+
 /**
  * @Description:
  * @Author sleepymango
@@ -7,4 +11,5 @@ package com.sleepymango.blog.service;
  */
 public interface LabelService {
 
+    List<Label> findAll();
 }

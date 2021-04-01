@@ -1,7 +1,12 @@
 package com.sleepymango.blog.controller;
 
+import com.sleepymango.blog.common.Result;
+import com.sleepymango.blog.common.ResultEnum;
+import com.sleepymango.blog.entity.Label;
 import com.sleepymango.blog.service.LabelService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Description:
@@ -19,8 +24,10 @@ public class LabelController {
     /**
      *
      */
-    @GetMapping("/label")
-    public void findAll() {
+    @GetMapping("/labels")
+    public Result findAll() {
+        List<Label> labelList = labelService.findAll();
+        return new Result(ResultEnum.SUCCESS.getStatusCode(), ResultEnum.SUCCESS.getMessage(), labelList);
     }
 
 

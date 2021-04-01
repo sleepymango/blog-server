@@ -25,7 +25,7 @@ public class JwtUtil {
      */
     public static String createToken(User user){
         return JWT.create()
-                .withAudience(String.valueOf(user.getUserId()))
+                .withAudience(String.valueOf(user.getId()))
                 .withExpiresAt(new Date(System.currentTimeMillis()+EXPIRE_TIME_MILLS))
                 .sign(Algorithm.HMAC256(user.getPassword()));
     }

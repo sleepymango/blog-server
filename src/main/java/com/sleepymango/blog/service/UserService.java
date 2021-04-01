@@ -10,15 +10,15 @@ import com.sleepymango.blog.entity.User;
 public interface UserService {
     /**
      * 通过用户ID查找用户
-     * @param userId
+     * @param id
      * @return
      */
-    User findById(Long userId);
+    User findById(Long id);
 
     /**
      * 通过用户名查找用户
-     * @param userLogin
+     * @param name
      * @return
      */
-    User findByUsername(String userLogin);
+    User findByName(String name);
 }

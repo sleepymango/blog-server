@@ -1,8 +1,12 @@
 package com.sleepymango.blog.controller;
 
+import com.sleepymango.blog.common.Result;
+import com.sleepymango.blog.common.ResultEnum;
+import com.sleepymango.blog.entity.Category;
 import com.sleepymango.blog.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Description
@@ -13,16 +17,24 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
     /**
-     *
+     * 分类列表
+     * @return Result
      */
-    @GetMapping("/category")
-    public void findAll() {
+    @GetMapping("/categories")
+    public Result findAll() {
+        List<Category> categoryList = categoryService.findAll();
+        return new Result(ResultEnum.SUCCESS.getStatusCode(),ResultEnum.SUCCESS.getMessage(), categoryList);
+    }
+
+    @GetMapping("/categories/{id}")
+    public Result findOne(@PathVariable("id") Long id) {
+        Category category = categoryService.findById(id);
+        return new Result(ResultEnum.SUCCESS.getStatusCode(),ResultEnum.SUCCESS.getMessage(), category);
     }
 
 

@@ -22,7 +22,7 @@ public class MenuServiceImpl implements MenuService {
     private MenuRepository menuRepository;
 
     @Override
-    public List<Menu> findMenus() {
+    public List<Menu> findAll() {
         return menuRepository.findAllByParentNull();
     }
 }

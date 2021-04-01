@@ -1,14 +1,11 @@
 package com.sleepymango.blog;
-import com.sleepymango.blog.entity.*;
+
 import com.sleepymango.blog.repository.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.List;
 
 @SpringBootTest
 class BlogApplicationTests {
@@ -30,35 +27,44 @@ class BlogApplicationTests {
     @Transactional
     @Rollback(value = false)
     void getArticle(){
-        User user = userRepository.findById(1L).orElse(null);
-        Category category = categoryRepository.findById(1L).orElse(null);
-        List<Label> list = labelRepository.findAll();
-        Article article = new Article();
-        article.setId(null);
-        article.setTitle("test");
-        article.setContent("test");
-        article.setBanner(null);
-        article.setView(0L);
-        article.setComment(0L);
-        article.setLike(0L);
-        article.setPublish(new Date());
-        article.setStatus("1");
-        article.setAuthor(user);
-        article.setCategory(category);
-        article.setLabels(list);
-        article.setComments(null);
-        articleRepository.save(article);
+//        User user = userRepository.findById(1L).orElse(null);
+//        Category category = categoryRepository.findById(1L).orElse(null);
+//        List<Label> list = labelRepository.findAll();
+//        Article article = new Article();
+//        article.setId(null);
+//        article.setTitle("test");
+//        article.setContent("test");
+//        article.setBanner(null);
+//        article.setView(0L);
+//        article.setComment(0L);
+//        article.setLike(0L);
+//        article.setPublish(new Date());
+//        article.setStatus("1");
+//        article.setAuthor(user);
+//        article.setCategory(category);
+//        article.setLabel(list);
+//        article.setComments(null);
+//        articleRepository.save(article);
     }
 
     @Test
     @Transactional
     @Rollback(false)
     void getMenu() {
-        List<Menu> list = menuRepository.findAllByParentNull();
-        for (Menu menu : list) {
-            System.out.println(menu);
-        }
-        Menu menu = new Menu();
+            menuRepository.deleteById(42L);
+        // 一   需要设定一和多的关系
+//        Menu menu = new Menu();
+//        menu.setName("用户管理");
+//        // 多  关系维护方值需要设定值才能确认关系  menu1.setParent(menu);
+//        Menu menu1 = new Menu();
+//        menu1.setName("用户列表");
+//
+//        ArrayList<Menu> menus = new ArrayList<>();
+//        menus.add(menu1);
+//
+////        menu1.setParent(menu);
+//        menu.setChildren(menus);
+//        menuRepository.save(menu);
 //        menu.setMenuId(null);
 //        menu.setName("菜单管理");
 //        menu.setUrl(null);
