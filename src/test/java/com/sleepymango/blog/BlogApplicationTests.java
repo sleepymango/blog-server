@@ -24,6 +24,12 @@ class BlogApplicationTests {
     private CategoryRepository categoryRepository;
 
     @Test
+    void deleteByLabel(){
+        labelRepository.deleteById(3L);
+//        articleRepository.deleteById(2L);
+    }
+
+    @Test
     @Transactional
     @Rollback(value = false)
     void getArticle(){

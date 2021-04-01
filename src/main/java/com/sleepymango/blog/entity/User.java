@@ -1,7 +1,6 @@
 package com.sleepymango.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 
@@ -15,7 +14,7 @@ import java.util.Date;
  * @Author: sleepymango
  * @Date: 2021-03-28 20:25:40
  */
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+
 @Entity
 @Data
 @ToString

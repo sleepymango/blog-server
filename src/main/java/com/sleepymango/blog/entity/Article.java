@@ -11,16 +11,16 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Description  
- * @Author  sleepymango
- * @Date 2021-03-31 01:07:11 
+ * @Description
+ * @Author sleepymango
+ * @Date 2021-03-31 01:07:11
  */
 
 @Entity
 @Data
 @ToString
-@Table ( name ="article")
-public class Article  implements Serializable {
+@Table(name = "article")
+public class Article implements Serializable {
 
     private static final long serialVersionUID = 6479207600191544602L;
 
@@ -94,12 +94,12 @@ public class Article  implements Serializable {
     private Long categoryId;
 
     /**
-     * 文章标签, 多对多，article为主表 ,序列化Label时忽略articles字段
+     * 文章标签, 多对多，article为主表 ,序列化Label时忽略articles字段 ，由文章维护关系,不设置级联删除
      */
     @JsonIgnoreProperties(value = "articles")
-    @ManyToMany
-    @JoinTable(name = "article_label", joinColumns = @JoinColumn(name = "label_id"),
-            inverseJoinColumns = @JoinColumn(name = "article_id"))
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name = "article_label", joinColumns = @JoinColumn(name = "article_article_id"),
+            inverseJoinColumns = @JoinColumn(name = "label_label_id"))
     private List<Label> labels;
 //    /**
 //     * 作者，optional=false,表示author不能为空。删除文章，不影响用户

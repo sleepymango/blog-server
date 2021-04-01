@@ -67,7 +67,7 @@ public class Comment implements Serializable {
      * 父评论  many
      */
     @JsonIgnore
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, optional = false)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "parent_id")
     private Comment parent;
 

@@ -1,7 +1,7 @@
 package com.sleepymango.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.ToString;
 
@@ -16,7 +16,6 @@ import java.util.List;
  * @Date 2021-03-24 01:46:44
  */
 
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 @Entity
 @Data
 @ToString
@@ -48,9 +47,10 @@ public class Category implements Serializable {
     private Category parent;
 
     /**
-     * 子分类
+     * 子分类  @JsonInclude(value = JsonInclude.Include.NON_EMPTY) 忽略空值
      */
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Category> children;
 
 }

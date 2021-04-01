@@ -1,5 +1,6 @@
 package com.sleepymango.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
@@ -44,6 +45,7 @@ public class Label implements Serializable {
     /**
      * 标签对应的文章列表
      */
-    @ManyToMany(mappedBy = "labels")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "labels", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private List<Article> articles;
 }
