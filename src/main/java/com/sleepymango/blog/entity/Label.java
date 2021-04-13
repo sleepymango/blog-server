@@ -2,7 +2,6 @@ package com.sleepymango.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,7 +15,6 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString
 @Table(name = "label")
 public class Label implements Serializable {
 
@@ -42,10 +40,8 @@ public class Label implements Serializable {
     @Column(name = "label_alias")
     private String alias;
 
-    /**
-     * 标签对应的文章列表
-     */
+//    @JsonIgnoreProperties(value = "labels")
     @JsonIgnore
-    @ManyToMany(mappedBy = "labels", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(mappedBy = "labels")
     private List<Article> articles;
 }

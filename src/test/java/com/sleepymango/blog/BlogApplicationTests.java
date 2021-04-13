@@ -1,11 +1,15 @@
 package com.sleepymango.blog;
 
+import com.sleepymango.blog.entity.Label;
 import com.sleepymango.blog.repository.*;
+import com.sleepymango.blog.service.impl.ArticleServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @SpringBootTest
 class BlogApplicationTests {
@@ -22,17 +26,33 @@ class BlogApplicationTests {
     private LabelRepository labelRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ArticleServiceImpl articleService;
+
 
     @Test
-    void deleteByLabel(){
+    void getA(){
+        articleService.test();
+    }
+
+    @Test
+    void deleteByLabel() {
         labelRepository.deleteById(3L);
 //        articleRepository.deleteById(2L);
     }
 
     @Test
+    void getLabels(){
+        List<Label> all = labelRepository.findAll();
+        for (Label label : all) {
+            System.out.println(label);
+        }
+    }
+
+    @Test
     @Transactional
     @Rollback(value = false)
-    void getArticle(){
+    void getArticle() {
 //        User user = userRepository.findById(1L).orElse(null);
 //        Category category = categoryRepository.findById(1L).orElse(null);
 //        List<Label> list = labelRepository.findAll();
@@ -41,15 +61,14 @@ class BlogApplicationTests {
 //        article.setTitle("test");
 //        article.setContent("test");
 //        article.setBanner(null);
-//        article.setView(0L);
-//        article.setComment(0L);
-//        article.setLike(0L);
+//        article.setView(0);
+//        article.setComment(0);
+//        article.setLike(0);
 //        article.setPublish(new Date());
-//        article.setStatus("1");
-//        article.setAuthor(user);
-//        article.setCategory(category);
-//        article.setLabel(list);
-//        article.setComments(null);
+//        article.setStatus(1);
+//        article.setAuthorId(user.getId());
+//        article.setCategoryId(category.getId());
+//        article.setLabels(list);
 //        articleRepository.save(article);
     }
 
@@ -57,7 +76,27 @@ class BlogApplicationTests {
     @Transactional
     @Rollback(false)
     void getMenu() {
-            menuRepository.deleteById(42L);
+
+        //
+//        Menu parent = menuRepository.findById(13L).orElse(null);
+//        Menu children = menuRepository.findById(14L).orElse(null);
+//        Menu parent = new Menu();
+//        parent.setName("我是父");
+//        parent.setUrl("");
+//        parent.setParent(new Menu());
+//        parent.setChildren(new ArrayList());
+//        Menu children = new Menu();
+//        children.setName("测试");
+//        children.setUrl("/test");
+//        ArrayList<Menu> menus = new ArrayList<>();
+//        menus.add(children);
+//        parent.setChildren(menus);
+//        children.setParent(parent);
+        menuRepository.deleteById(10L);
+
+
+//        children.setChildren(new ArrayList());
+
         // 一   需要设定一和多的关系
 //        Menu menu = new Menu();
 //        menu.setName("用户管理");

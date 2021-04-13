@@ -4,8 +4,6 @@ import com.sleepymango.blog.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * @Description
  * @Author sleepymango
@@ -15,7 +13,8 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     /**
      * 查找没有parentId的分类
-     * @return
+     * @return List<Category>
      */
-    List<Category> findAllByParentNull();
+//    List<Category> findAllByParentIsNull();
+
 }

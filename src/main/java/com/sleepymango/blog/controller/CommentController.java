@@ -1,5 +1,8 @@
 package com.sleepymango.blog.controller;
 
+import com.sleepymango.blog.common.Result;
+import com.sleepymango.blog.common.ResultEnum;
+import com.sleepymango.blog.entity.Comment;
 import com.sleepymango.blog.service.CommentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,7 @@ public class CommentController {
     /**
      *
      */
-    @GetMapping("/comment")
+    @GetMapping("/comments")
     public void findAll() {
     }
 
@@ -27,8 +30,10 @@ public class CommentController {
     /**
      * @param
      */
-    @PostMapping("/comment")
-    public void save() {
+    @PostMapping("/comments")
+    public Result save(@RequestBody Comment comment) {
+        commentService.save(comment);
+        return new Result(ResultEnum.SUCCESS.getStatusCode(), ResultEnum.SUCCESS.getMessage(), null);
     }
 
     @PutMapping("/comment")

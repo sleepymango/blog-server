@@ -1,7 +1,7 @@
 package com.sleepymango.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
@@ -15,7 +15,6 @@ import java.util.List;
  * @Author sleepymango
  * @Date 2021-03-31 01:07:11
  */
-
 @Entity
 @Data
 @ToString
@@ -71,7 +70,7 @@ public class Article implements Serializable {
     /**
      * 发布时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "article_publish")
     private Date publish;
 
@@ -85,7 +84,7 @@ public class Article implements Serializable {
      * 作者ID
      */
     @Column(name = "user_id")
-    private Long userId;
+    private Long authorId;
 
     /**
      * 分类ID
@@ -93,18 +92,10 @@ public class Article implements Serializable {
     @Column(name = "category_id")
     private Long categoryId;
 
-    /**
-     * 文章标签, 多对多，article为主表 ,序列化Label时忽略articles字段 ，由文章维护关系,不设置级联删除
-     */
-    @JsonIgnoreProperties(value = "articles")
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name = "article_label", joinColumns = @JoinColumn(name = "article_article_id"),
-            inverseJoinColumns = @JoinColumn(name = "label_label_id"))
-    private List<Label> labels;
+
 //    /**
 //     * 作者，optional=false,表示author不能为空。删除文章，不影响用户
 //     */
-//    @JsonIgnoreProperties(value = {"articles","comments"})
 //    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY,optional = false)
 //    @JoinColumn(name = "user_id")
 //    private User author;
@@ -112,9 +103,20 @@ public class Article implements Serializable {
 //    /**
 //     * 文章分类，维护方
 //     */
-//    @JsonIgnoreProperties(value = {"articles","children"})
 //    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY,optional = false)
 //    @JoinColumn(name = "category_id")
 //    private Category category;
+
+    /**
+     * 文章标签
+     * 注意：添加文章时如果设置的标签是存在于数据库的，那么cascade不能是PERSIST，应该是MERGE和REFRESH
+     * 反之如果标签时新建的，应该用PERSIST,不能同时用
+     */
+//    @JsonIgnoreProperties(value = "articles")
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "article_label", joinColumns = @JoinColumn(name = "article_article_id"),
+            inverseJoinColumns = @JoinColumn(name = "label_label_id"))
+    private List<Label> labels;
 
 }

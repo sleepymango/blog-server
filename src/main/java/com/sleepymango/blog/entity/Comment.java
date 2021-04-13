@@ -2,6 +2,7 @@ package com.sleepymango.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.ToString;
 
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString
+@ToString(exclude = "parent")
 @Table(name = "comment")
 public class Comment implements Serializable {
 
@@ -74,6 +75,7 @@ public class Comment implements Serializable {
     /**
      * 子评论 ，mappedBy关系被维护方 one
      */
+    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Comment> children;
 }

@@ -1,5 +1,6 @@
 package com.sleepymango.blog.service;
 
+import com.sleepymango.blog.dto.CategoryDTO;
 import com.sleepymango.blog.entity.Category;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface CategoryService {
      * 获取分类列表
      * @return
      */
-    List<Category> findAll();
+    List<CategoryDTO> findAll();
 
     Category findById(Long id);
 }

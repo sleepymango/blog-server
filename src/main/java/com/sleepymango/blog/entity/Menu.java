@@ -1,6 +1,7 @@
 package com.sleepymango.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.ToString;
 
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Data
-@ToString
+@ToString(exclude = "parent")
 @Table(name = "menu")
 public class Menu implements Serializable {
 
@@ -53,7 +54,7 @@ public class Menu implements Serializable {
     /**
      * 子菜单
      */
+    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Menu> children;
-
 }

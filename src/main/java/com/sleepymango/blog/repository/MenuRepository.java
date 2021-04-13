@@ -13,6 +13,9 @@ import java.util.List;
  */
 @Repository
 public interface MenuRepository extends JpaRepository<Menu, Long> {
+    /**
+     * 查找没有parentId的分类
+     * @return List<Menu>
+     */
     List<Menu> findAllByParentNull();
-
 }

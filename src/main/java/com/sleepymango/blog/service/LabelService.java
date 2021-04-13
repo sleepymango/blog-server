@@ -1,8 +1,10 @@
 package com.sleepymango.blog.service;
 
+import com.sleepymango.blog.dto.LabelDTO;
 import com.sleepymango.blog.entity.Label;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Description:
@@ -11,5 +13,15 @@ import java.util.List;
  */
 public interface LabelService {
 
-    List<Label> findAll();
+    /**
+     * 查询所有标签
+     * @return
+     */
+    List<LabelDTO> findAll();
+
+    /**
+     * 保存标签列表
+     * @param labels
+     */
+    void save(Set<Label> labels);
 }

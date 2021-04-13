@@ -1,13 +1,10 @@
 package com.sleepymango.blog.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @ClassName Category
@@ -15,10 +12,9 @@ import java.util.List;
  * @Author sleepymango
  * @Date 2021-03-24 01:46:44
  */
-
 @Entity
 @Data
-@ToString
+@ToString  //(exclude = "parent")
 @Table(name = "category")
 public class Category implements Serializable {
 
@@ -39,18 +35,24 @@ public class Category implements Serializable {
     private String name;
 
     /**
-     * 父分类
+     * 父ID
      */
-    @JsonIgnore
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+    @Column(name = "parent_id")
+    private Long parentId;
 
-    /**
-     * 子分类  @JsonInclude(value = JsonInclude.Include.NON_EMPTY) 忽略空值
-     */
-    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Category> children;
+//    /**
+//     * 父分类
+//     */
+//    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+//    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+//    @JoinColumn(name = "parent_id")
+//    private Category parent;
 
+//    /**
+//     * 子分类  @JsonInclude(value = JsonInclude.Include.NON_EMPTY) 忽略空值
+//     */
+//    @JsonIgnoreProperties(value = "parent")
+//    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+//    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Category> children;
 }

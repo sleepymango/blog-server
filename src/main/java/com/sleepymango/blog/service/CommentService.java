@@ -1,5 +1,7 @@
 package com.sleepymango.blog.service;
 
+import com.sleepymango.blog.entity.Comment;
+
 /**
  * @Description:
  * @Author sleepymango
@@ -7,4 +9,5 @@ package com.sleepymango.blog.service;
  */
 public interface CommentService {
 
+    void save(Comment comment);
 }
