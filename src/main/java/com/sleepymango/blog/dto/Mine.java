@@ -12,6 +12,10 @@ import java.io.Serializable;
 
 @Data
 public class Mine implements Serializable {
+    private String name;
+
+    private String address;
+
     private Integer articles;
 
     private Integer categories;

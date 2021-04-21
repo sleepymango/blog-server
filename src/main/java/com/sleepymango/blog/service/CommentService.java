@@ -1,6 +1,8 @@
 package com.sleepymango.blog.service;
 
-import com.sleepymango.blog.entity.Comment;
+import com.sleepymango.blog.dto.CommentDTO;
+
+import java.util.List;
 
 /**
  * @Description:
@@ -9,5 +11,7 @@ import com.sleepymango.blog.entity.Comment;
  */
 public interface CommentService {
 
-    void save(Comment comment);
+    void save(CommentDTO commentDTO);
+
+    List<CommentDTO> findAll(Long articleId);
 }

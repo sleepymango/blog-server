@@ -44,6 +44,12 @@ public class Menu implements Serializable {
     private String url;
 
     /**
+     * 菜单状态
+     */
+    @Column(name = "menu_status")
+    private Integer status;
+
+    /**
      * 父菜单,option默认为true，允许为null, CascadeType.PERSIST 表示 多方保存时级联一方 序列化多方的时候忽略parent
      */
     @JsonIgnore
@@ -54,7 +60,7 @@ public class Menu implements Serializable {
     /**
      * 子菜单
      */
-    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Menu> children;
 }

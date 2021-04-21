@@ -1,7 +1,6 @@
 package com.sleepymango.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
@@ -92,29 +91,12 @@ public class Article implements Serializable {
     @Column(name = "category_id")
     private Long categoryId;
 
-
-//    /**
-//     * 作者，optional=false,表示author不能为空。删除文章，不影响用户
-//     */
-//    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY,optional = false)
-//    @JoinColumn(name = "user_id")
-//    private User author;
-//
-//    /**
-//     * 文章分类，维护方
-//     */
-//    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY,optional = false)
-//    @JoinColumn(name = "category_id")
-//    private Category category;
-
     /**
      * 文章标签
      * 注意：添加文章时如果设置的标签是存在于数据库的，那么cascade不能是PERSIST，应该是MERGE和REFRESH
      * 反之如果标签时新建的，应该用PERSIST,不能同时用
      */
-//    @JsonIgnoreProperties(value = "articles")
-    @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "article_label", joinColumns = @JoinColumn(name = "article_article_id"),
             inverseJoinColumns = @JoinColumn(name = "label_label_id"))
     private List<Label> labels;

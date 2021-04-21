@@ -1,18 +1,15 @@
 package com.sleepymango.blog.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sleepymango.blog.dto.ArchiveArticle;
 import com.sleepymango.blog.dto.Archives;
 import com.sleepymango.blog.dto.ArticleDTO;
-import com.sleepymango.blog.entity.Article;
-import com.sleepymango.blog.entity.QArticle;
-import com.sleepymango.blog.entity.QCategory;
-import com.sleepymango.blog.entity.QUser;
+import com.sleepymango.blog.entity.*;
 import com.sleepymango.blog.repository.ArticleRepository;
 import com.sleepymango.blog.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -48,31 +47,54 @@ public class ArticleServiceImpl implements ArticleService {
         return articleRepository.findAll();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public PageImpl<ArticleDTO> findPage(Pageable pageable, String like) {
-        System.out.println(pageable.getOffset() + "" + pageable.getPageSize());
+    public PageImpl<ArticleDTO> findPage(Pageable pageable, String like, Long categoryId) {
+        System.out.println(like);
+
         QArticle qArticle = QArticle.article;
         QUser qUser = QUser.user;
         QCategory qCategory = QCategory.category;
+        Set<Long> ids = new HashSet<>();
+        if (null != categoryId) {
+            Category category = jpaQueryFactory.select(qCategory).from(qCategory).where(qCategory.id.eq(categoryId)).fetchOne();
+            ids.add(categoryId);
+            if (null == category.getParentId()) {
+                List<Long> list = jpaQueryFactory.select(qCategory.id).from(qCategory).where(qCategory.parentId.eq(categoryId)).fetch();
+                ids.addAll(list);
+            }
+
+        }
         JPAQuery<Tuple> query = jpaQueryFactory.select(
                 qArticle, qUser, qCategory
-        ).from(qArticle)
-                .leftJoin(qUser).on(qArticle.authorId.eq(qUser.id))
-                .leftJoin(qCategory).on(qArticle.categoryId.eq(qCategory.id))
-                .where(qArticle.title.contains(like))
-                .offset(pageable.getOffset()).limit(pageable.getPageSize());
+        ).from(qArticle);
+
+        if (null != ids && !ids.isEmpty()) {
+            query
+                    .leftJoin(qUser).on(qArticle.authorId.eq(qUser.id))
+                    .leftJoin(qCategory).on(qArticle.categoryId.eq(qCategory.id))
+                    .where(qArticle.title.contains(like).and(qArticle.categoryId.in(ids)))
+                    .offset(pageable.getOffset()).limit(pageable.getPageSize());
+        } else {
+            query.leftJoin(qUser).on(qArticle.authorId.eq(qUser.id))
+                    .leftJoin(qCategory).on(qArticle.categoryId.eq(qCategory.id))
+                    .where(qArticle.title.contains(like))
+                    .offset(pageable.getOffset()).limit(pageable.getPageSize());
+        }
 
         QueryResults<Tuple> queryResults = query.fetchResults();
         List<ArticleDTO> list = queryResults.getResults().stream().map(tuple -> {
             ArticleDTO articleDTO = new ArticleDTO();
             articleDTO.setId(Objects.requireNonNull(tuple.get(qArticle)).getId());
             articleDTO.setTitle(Objects.requireNonNull(tuple.get(qArticle)).getTitle());
+            // 截取文章内容第一段
             String[] split = Objects.requireNonNull(tuple.get(qArticle)).getContent().split("[\r\n]");
             articleDTO.setContent(split[0]);
             articleDTO.setBanner(Objects.requireNonNull(tuple.get(qArticle)).getBanner());
             articleDTO.setPublish(Objects.requireNonNull(tuple.get(qArticle)).getPublish());
             articleDTO.setStatus(Objects.requireNonNull(tuple.get(qArticle)).getStatus());
             articleDTO.setAuthor(Objects.requireNonNull(tuple.get(qUser)).getName());
+            articleDTO.setAuthorId(Objects.requireNonNull(tuple.get(qUser)).getId());
             articleDTO.setCategoryId(Objects.requireNonNull(tuple.get(qCategory)).getId());
             articleDTO.setCategory(Objects.requireNonNull(tuple.get(qCategory)).getName());
             articleDTO.setLabels(Objects.requireNonNull(tuple.get(qArticle)).getLabels());
@@ -81,6 +103,24 @@ public class ArticleServiceImpl implements ArticleService {
         long total = queryResults.getTotal();
 
         return new PageImpl<>(list, pageable, total);
+    }
+
+    @Override
+    public String findContentById(Long id) {
+        QArticle qArticle = QArticle.article;
+        return jpaQueryFactory.select(qArticle.content).from(qArticle).where(qArticle.id.eq(id)).fetchOne();
+    }
+
+    @Override
+    public List<ArticleDTO> findRecent() {
+        QArticle qArticle = QArticle.article;
+        QCategory qCategory = QCategory.category;
+
+        return jpaQueryFactory.select(Projections.bean(
+                ArticleDTO.class,
+                qArticle.title, qArticle.banner, qArticle.publish, qCategory.name.as("category")
+        )).from(qArticle).leftJoin(qCategory).on(qArticle.categoryId.eq(qCategory.id))
+                .orderBy(qArticle.publish.desc()).limit(5).offset(0).fetch();
     }
 
     @Override
@@ -109,7 +149,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Archives> findAllByPublish() {
+    public List<Archives> groupByYearMonth() {
         QArticle qArticle = QArticle.article;
         return jpaQueryFactory.from(qArticle)
                 .orderBy(qArticle.publish.desc())
@@ -121,15 +161,31 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public List<ArchiveArticle> groupByYear() {
+        QArticle qArticle = QArticle.article;
+        QCategory qCategory = QCategory.category;
+        return jpaQueryFactory.from(qArticle)
+                .leftJoin(qCategory).on(qArticle.categoryId.eq(qCategory.id))
+                .orderBy(qArticle.publish.desc())
+//                .groupBy(qArticle.publish.yearMonth())
+                .transform(GroupBy.groupBy(qArticle.publish.year()).list(Projections.bean(
+                        ArchiveArticle.class,
+                        qArticle.publish,
+                        GroupBy.list(Projections.bean(
+                                ArticleDTO.class,
+                                qArticle.title,qArticle.banner,qArticle.publish,qCategory.name.as("category")
+                        )).as("articles")
+                )));
+    }
+
+    @Override
     public void deleteById(Long id) {
         articleRepository.deleteById(id);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public long save(ArticleDTO articleDTO) {
-        Article article = articleRepository.findById(articleDTO.getId()).orElse(null);
-        BeanUtil.copyProperties(articleDTO, Objects.requireNonNull(article));
+    public long save(Article article) {
         return articleRepository.save(article).getId();
     }
 

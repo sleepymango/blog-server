@@ -2,7 +2,7 @@ package com.sleepymango.blog.controller;
 
 import com.sleepymango.blog.annotation.PassVerifyToken;
 import com.sleepymango.blog.common.Result;
-import com.sleepymango.blog.common.ResultEnum;
+import com.sleepymango.blog.common.ResultCode;
 import com.sleepymango.blog.entity.User;
 import com.sleepymango.blog.service.UserService;
 import com.sleepymango.blog.utils.JwtUtil;
@@ -40,7 +40,7 @@ public class UserController {
         // 设置cookie路径，否则以前端请求前缀为路径，刷新后cookie会消失
         cookie.setPath("/");
         response.addCookie(cookie);
-        return new Result(ResultEnum.SUCCESS.getStatusCode(),ResultEnum.SUCCESS.getMessage(), token);
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), token);
     }
 
     /**
@@ -49,13 +49,13 @@ public class UserController {
     @GetMapping("/user")
     public Result findAll(String username) {
         User user = userService.findByName(username);
-        return new Result(ResultEnum.SUCCESS.getStatusCode(),ResultEnum.SUCCESS.getMessage(),"niubi");
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(),"niubi");
     }
 
     @GetMapping("/users/{username}")
     public Result findByUsername(@PathVariable("username") String username) {
         User user = userService.findByName(username);
-        return new Result(ResultEnum.SUCCESS.getStatusCode(),ResultEnum.SUCCESS.getMessage(),user);
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(),user);
     }
 
 

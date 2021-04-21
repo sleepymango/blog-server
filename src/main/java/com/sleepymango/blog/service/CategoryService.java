@@ -19,4 +19,8 @@ public interface CategoryService {
     List<CategoryDTO> findAll();
 
     Category findById(Long id);
+
+    Long sava(Category category);
+
+    void delete(Long id);
 }

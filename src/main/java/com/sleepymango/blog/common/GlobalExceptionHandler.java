@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = AuthorizationException.class)
-    public Result jwtExceptionHandle(AuthorizationException e){
-        return new Result(401,e.getMessage(),null);
+    public Result authorizationExceptionHandle(AuthorizationException e){
+        return new Result(e.getStatus(),e.getMessage(),null);
     }
 }

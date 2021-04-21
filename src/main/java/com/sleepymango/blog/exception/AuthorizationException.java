@@ -10,7 +10,7 @@ import lombok.Data;
  **/
 @Data
 @AllArgsConstructor
-public class AuthorizationException extends Exception{
+public class AuthorizationException extends RuntimeException{
     private int status;
     private String message;
 

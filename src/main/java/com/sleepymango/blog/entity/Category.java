@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Entity
 @Data
-@ToString  //(exclude = "parent")
+@ToString
 @Table(name = "category")
 public class Category implements Serializable {
 
@@ -40,19 +40,4 @@ public class Category implements Serializable {
     @Column(name = "parent_id")
     private Long parentId;
 
-//    /**
-//     * 父分类
-//     */
-//    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-//    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-//    @JoinColumn(name = "parent_id")
-//    private Category parent;
-
-//    /**
-//     * 子分类  @JsonInclude(value = JsonInclude.Include.NON_EMPTY) 忽略空值
-//     */
-//    @JsonIgnoreProperties(value = "parent")
-//    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-//    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Category> children;
 }

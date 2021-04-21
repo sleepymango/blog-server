@@ -1,15 +1,12 @@
 package com.sleepymango.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @Description
@@ -48,15 +45,21 @@ public class Comment implements Serializable {
     /**
      * 评论时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "comment_publish")
     private Date publish;
 
     /**
+     * 评论时间
+     */
+    @Column(name = "comment_from")
+    private String from;
+
+    /**
      * 评论的用户
      */
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "visitor_id")
+    private Long visitorId;
 
     /**
      * 评论的文章
@@ -65,17 +68,22 @@ public class Comment implements Serializable {
     private Long articleId;
 
     /**
-     * 父评论  many
+     * 父Id
      */
-    @JsonIgnore
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "parent_id")
-    private Comment parent;
-
-    /**
-     * 子评论 ，mappedBy关系被维护方 one
-     */
-    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<Comment> children;
+    @Column(name = "parent_id")
+    private Long parentId;
+//    /**
+//     * 父评论  many
+//     */
+//    @JsonIgnore
+//    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+//    @JoinColumn(name = "parent_id")
+//    private Comment parent;
+//
+//    /**
+//     * 子评论 ，mappedBy关系被维护方 one
+//     */
+//    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+//    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+//    private List<Comment> children;
 }

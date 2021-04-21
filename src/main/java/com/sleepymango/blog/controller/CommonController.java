@@ -1,7 +1,7 @@
 package com.sleepymango.blog.controller;
 
 import com.sleepymango.blog.common.Result;
-import com.sleepymango.blog.common.ResultEnum;
+import com.sleepymango.blog.common.ResultCode;
 import com.sleepymango.blog.dto.Mine;
 import com.sleepymango.blog.service.CommonService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +25,6 @@ public class CommonController {
     @GetMapping("/mine")
     public Result getMineInfo(){
         Mine mine = commonService.getMineInfo();
-        return new Result(ResultEnum.SUCCESS.getStatusCode(), ResultEnum.SUCCESS.getMessage(), mine);
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), mine);
     }
 }

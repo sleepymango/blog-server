@@ -11,10 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    /**
-     * 查找没有parentId的分类
-     * @return List<Category>
-     */
-//    List<Category> findAllByParentIsNull();
-
+    void deleteByParentId(Long id);
 }

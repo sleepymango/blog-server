@@ -1,12 +1,12 @@
 package com.sleepymango.blog.common;
 
 /**
- * @Description TODO
+ * @Description
  * @Author sleepymango
  * @Date 2021/3/25 20:14
  **/
 
-public enum ResultEnum {
+public enum ResultCode {
     // 成功状态码
     SUCCESS(200,"成功"),
     // 未登录
@@ -16,12 +16,17 @@ public enum ResultEnum {
     // 没有权限
     PERMISSION_DENIED(403,"没有权限"),
     // 找不到资源
-    NOT_FOUND(404,"404 not found");
+    NOT_FOUND(404,"404 not found"),
+    // 用户名已存在
+    NAME_EXIST(409,"用户名已存在"),
+    // 邮箱已存在
+    EMAIL_EXIST(409,"邮箱已存在");
+
 
     private final int statusCode;
     private final String message;
 
-    ResultEnum(int statusCode, String message) {
+    ResultCode(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
     }

@@ -4,7 +4,6 @@ import com.sleepymango.blog.dto.LabelDTO;
 import com.sleepymango.blog.entity.Label;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @Description:
@@ -17,11 +16,9 @@ public interface LabelService {
      * 查询所有标签
      * @return
      */
-    List<LabelDTO> findAll();
+    List<LabelDTO> findAllAndCount();
 
-    /**
-     * 保存标签列表
-     * @param labels
-     */
-    void save(Set<Label> labels);
+    List<Label> findAll();
+
+    Label findById(Long id);
 }

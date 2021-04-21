@@ -1,6 +1,7 @@
 package com.sleepymango.blog.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -40,8 +41,11 @@ public class Label implements Serializable {
     @Column(name = "label_alias")
     private String alias;
 
-//    @JsonIgnoreProperties(value = "labels")
-    @JsonIgnore
+    /**
+     * 标签对应文章列表
+     */
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonIgnoreProperties(value = "labels")
     @ManyToMany(mappedBy = "labels")
     private List<Article> articles;
 }

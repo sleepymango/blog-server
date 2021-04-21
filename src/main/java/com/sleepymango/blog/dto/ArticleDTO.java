@@ -1,6 +1,7 @@
 package com.sleepymango.blog.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sleepymango.blog.entity.Label;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +34,10 @@ public class ArticleDTO implements Serializable {
 
     private Integer status;
 
+    @JsonIgnoreProperties(value = "articles")
     private List<Label> labels;
+
+    private Long authorId;
 
     private String author;
 

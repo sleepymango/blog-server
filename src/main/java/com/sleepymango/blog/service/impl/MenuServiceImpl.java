@@ -25,6 +25,6 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<Menu> findAll() {
-        return menuRepository.findAllByParentNull();
+        return menuRepository.findAllByParentNullAndStatusIsNot(0);
     }
 }

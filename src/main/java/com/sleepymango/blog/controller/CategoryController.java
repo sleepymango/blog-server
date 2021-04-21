@@ -1,15 +1,13 @@
 package com.sleepymango.blog.controller;
 
 import com.sleepymango.blog.common.Result;
-import com.sleepymango.blog.common.ResultEnum;
+import com.sleepymango.blog.common.ResultCode;
 import com.sleepymango.blog.dto.CategoryDTO;
 import com.sleepymango.blog.entity.Category;
 import com.sleepymango.blog.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @Description
@@ -32,46 +30,44 @@ public class CategoryController {
     @GetMapping("/categories")
     public Result findAll() {
         List<CategoryDTO> list = categoryService.findAll();
-        // 返回给页面的list
-        ArrayList<CategoryDTO> list1 = new ArrayList<>();
-        for (CategoryDTO parent : list) {
-            if (null == parent.getParentId()) {
-                parent.setChildren(new ArrayList<>());
-                int count = 0;
-                for (CategoryDTO children : list) {
-                    if (null != children.getParentId() && Objects.equals(parent.getId(), children.getParentId())) {
-                        parent.getChildren().add(children);
-                        count+=children.getCount();
-                    }
-                }
-                parent.setCount(count);
-                list1.add(parent);
-            }
-        }
-        return new Result(ResultEnum.SUCCESS.getStatusCode(), ResultEnum.SUCCESS.getMessage(), list1);
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), list);
     }
 
+    /**
+     * 根据id查询分类
+     * @param id
+     * @return
+     */
     @GetMapping("/categories/{id}")
     public Result findOne(@PathVariable("id") Long id) {
         Category category = categoryService.findById(id);
-        return new Result(ResultEnum.SUCCESS.getStatusCode(), ResultEnum.SUCCESS.getMessage(), category);
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), category);
     }
 
-
     /**
-     * @param
+     * 添加分类
+     * @param category
+     * @return
      */
-    @PostMapping("/category")
-    public void save() {
+    @PostMapping("/categories")
+    public Result save(@RequestBody Category category) {
+        Long id = categoryService.sava(category);
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), id);
     }
 
     @PutMapping("/category")
     public void update() {
     }
 
-
-    @DeleteMapping("/category")
-    public void delete(@PathVariable Integer id) {
+    /**
+     * 删除分类
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/categories/{id}")
+    public Result delete(@PathVariable Long id) {
+        categoryService.delete(id);
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), null);
     }
 
 }

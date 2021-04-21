@@ -3,6 +3,7 @@ package com.sleepymango.blog;
 import com.sleepymango.blog.entity.Label;
 import com.sleepymango.blog.repository.*;
 import com.sleepymango.blog.service.impl.ArticleServiceImpl;
+import com.sleepymango.blog.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,9 +30,17 @@ class BlogApplicationTests {
     @Autowired
     private ArticleServiceImpl articleService;
 
+    @Autowired
+    private CategoryServiceImpl categoryService;
+
 
     @Test
-    void getA(){
+    void cate() {
+//        categoryService.test();
+    }
+
+    @Test
+    void getA() {
         articleService.test();
     }
 
@@ -42,7 +51,7 @@ class BlogApplicationTests {
     }
 
     @Test
-    void getLabels(){
+    void getLabels() {
         List<Label> all = labelRepository.findAll();
         for (Label label : all) {
             System.out.println(label);
