@@ -6,12 +6,18 @@ import com.sleepymango.blog.dto.ArchiveArticle;
 import com.sleepymango.blog.dto.Archives;
 import com.sleepymango.blog.dto.ArticleDTO;
 import com.sleepymango.blog.entity.Article;
+import com.sleepymango.blog.exception.RedisException;
 import com.sleepymango.blog.service.ArticleService;
+import com.sleepymango.blog.utils.RedisDelayUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Description:
@@ -20,7 +26,12 @@ import java.util.List;
  */
 @RestController
 public class ArticleController {
+    private final static int TO_BE_RELEASED = 2;
+
     private final ArticleService articleService;
+
+    @Autowired
+    private RedisDelayUtil redisDelayUtil;
 
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
@@ -102,8 +113,46 @@ public class ArticleController {
      */
     @PostMapping("/articles")
     public Result save(@RequestBody Article article) {
-        long articleId = articleService.save(article);
-        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), articleId);
+        Date publish = article.getPublish();
+        Date now = new Date();
+        if (null != publish) {
+            if (publish.before(new Date()) || 0 == publish.compareTo(now)) {
+                article.setStatus(1);
+            }
+            if (publish.after(new Date())) {
+                article.setStatus(2);
+            }
+        } else {
+            article.setPublish(new Date());
+        }
+
+        Article save = articleService.save(article);
+        // 将文章信息存入redis
+        if (TO_BE_RELEASED == article.getStatus()) {
+            try {
+                redisDelayUtil.push(save);
+            } catch (Exception e) {
+                throw new RedisException(500, "服务器发生错误，定时发布文章失败");
+            }
+        }
+
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), save.getId());
+    }
+
+    /**
+     * 每秒轮询一次，将到期的文章状态修改为已发布
+     */
+    @Scheduled(cron = "*/1 * * * * ?")
+    public void publish() {
+        Set<Long> articleIds = redisDelayUtil.pull();
+        if (null != articleIds && !articleIds.isEmpty()) {
+            int rows = articleService.updateStatus(articleIds);
+            if (0 < rows) {
+                for (Long articleId : articleIds) {
+                    redisDelayUtil.remove(articleId);
+                }
+            }
+        }
     }
 
     /**
@@ -114,7 +163,7 @@ public class ArticleController {
      */
     @PutMapping("/articles")
     public Result update(@RequestBody Article article) {
-        long articleId = articleService.save(article);
+        long articleId = articleService.save(article).getId();
         return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), articleId);
     }
 

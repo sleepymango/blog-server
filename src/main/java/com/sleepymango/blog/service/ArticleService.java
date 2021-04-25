@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Description
@@ -27,7 +28,7 @@ public interface ArticleService {
      * @param article 接收参数
      * @return 文章id
      */
-    long save(Article article);
+    Article save(Article article);
 
     /**
      * 查找分页,
@@ -61,4 +62,6 @@ public interface ArticleService {
     String findContentById(Long id);
 
     List<ArchiveArticle> groupByYear();
+
+    int updateStatus(Set<Long> articleIds);
 }

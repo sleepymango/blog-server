@@ -160,6 +160,12 @@ public class ArticleServiceImpl implements ArticleService {
                 )));
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int updateStatus(Set<Long> articleId) {
+        return articleRepository.updateStatus(articleId);
+    }
+
     @Override
     public List<ArchiveArticle> groupByYear() {
         QArticle qArticle = QArticle.article;
@@ -185,8 +191,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public long save(Article article) {
-        return articleRepository.save(article).getId();
+    public Article save(Article article) {
+        return articleRepository.save(article);
     }
 
     public void test() {
