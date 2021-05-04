@@ -14,19 +14,35 @@ import java.util.Date;
 
 public class JwtUtil {
     /**
-     *     15分钟过期时间
+     * 15分钟过期时间
      */
-    public static final Long EXPIRE_TIME_MILLS = 900000L;
+//    public static final Long ACCESS_EXPIRE_TIME_MILLS = 900000L;
+    public static final Long ACCESS_EXPIRE_TIME_MILLS = 5000L;
+    /**
+     * 两个小时过期时间
+     */
+//    public static final Long REFRESH_EXPIRE_TIME_MILLS = 60*60*2*1000L;
+    public static final Long REFRESH_EXPIRE_TIME_MILLS = 10*2*1000L;
 
     /**
      * 创建token
+     *
      * @param user
      * @return
      */
-    public static String createToken(User user){
+    public static String createAccessToken(User user) {
         return JWT.create()
-                .withAudience(String.valueOf(user.getId()))
-                .withExpiresAt(new Date(System.currentTimeMillis()+EXPIRE_TIME_MILLS))
+                .withClaim("userId",user.getId())
+                .withAudience("accessToken")
+                .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_EXPIRE_TIME_MILLS))
+                .sign(Algorithm.HMAC256(user.getPassword()));
+    }
+
+    public static String createRefreshToken(User user) {
+        return JWT.create()
+                .withClaim("userId",user.getId())
+                .withAudience("refreshToken")
+                .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_EXPIRE_TIME_MILLS))
                 .sign(Algorithm.HMAC256(user.getPassword()));
     }
 

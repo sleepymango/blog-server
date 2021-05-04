@@ -1,5 +1,6 @@
 package com.sleepymango.blog.controller;
 
+import com.sleepymango.blog.annotation.VerifyToken;
 import com.sleepymango.blog.common.Result;
 import com.sleepymango.blog.common.ResultCode;
 import com.sleepymango.blog.dto.CategoryDTO;
@@ -27,6 +28,7 @@ public class CategoryController {
      *
      * @return Result
      */
+
     @GetMapping("/categories")
     public Result findAll() {
         List<CategoryDTO> list = categoryService.findAll();
@@ -49,6 +51,7 @@ public class CategoryController {
      * @param category
      * @return
      */
+    @VerifyToken
     @PostMapping("/categories")
     public Result save(@RequestBody Category category) {
         Long id = categoryService.sava(category);
@@ -64,6 +67,7 @@ public class CategoryController {
      * @param id
      * @return
      */
+    @VerifyToken
     @DeleteMapping("/categories/{id}")
     public Result delete(@PathVariable Long id) {
         categoryService.delete(id);

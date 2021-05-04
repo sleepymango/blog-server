@@ -26,21 +26,28 @@ public class UserController {
 
     /**
      * 登录接口，返回存有token的cookie
-     * @param username
-     * @param password
      * @param response
      * @return
      */
     @PassVerifyToken
     @PostMapping("/login")
-    public Result login(String username, String password, HttpServletResponse response){
+    public Result login(String username,String password, HttpServletResponse response){
+//        String username = (String) params.get("username");
         User user = userService.findByName(username);
-        String token = JwtUtil.createToken(user);
-        Cookie cookie = new Cookie("token", token);
+        if (null==user){
+
+            return new Result(ResultCode.AUTHENTICATED_NOT_LOGIN.getStatusCode(),ResultCode.AUTHENTICATED_NOT_LOGIN.getMessage(),null);
+        }
+        String accessToken = JwtUtil.createAccessToken(user);
+        String refreshToken = JwtUtil.createRefreshToken(user);
+        Cookie cookie1 = new Cookie("accessToken", accessToken);
+        Cookie cookie2 = new Cookie("refreshToken", refreshToken);
         // 设置cookie路径，否则以前端请求前缀为路径，刷新后cookie会消失
-        cookie.setPath("/");
-        response.addCookie(cookie);
-        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), token);
+        cookie1.setPath("/");
+        cookie2.setPath("/");
+        response.addCookie(cookie1);
+        response.addCookie(cookie2);
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), null);
     }
 
     /**

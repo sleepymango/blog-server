@@ -11,6 +11,8 @@ public enum ResultCode {
     SUCCESS(200,"成功"),
     // 未登录
     AUTHENTICATED_NOT_LOGIN(401,"未登录"),
+    // 验证失败
+    AUTHENTICATION_FAILED(401,"验证失败，账号或密码错误"),
     // 登录过期
     AUTHENTICATED_EXPIRED(401,"登录过期"),
     // 没有权限
