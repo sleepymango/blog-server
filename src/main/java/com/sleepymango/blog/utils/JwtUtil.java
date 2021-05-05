@@ -16,13 +16,11 @@ public class JwtUtil {
     /**
      * 15分钟过期时间
      */
-//    public static final Long ACCESS_EXPIRE_TIME_MILLS = 900000L;
-    public static final Long ACCESS_EXPIRE_TIME_MILLS = 5000L;
+    public static final Long ACCESS_EXPIRE_TIME_MILLS = 60*1000*15L;
     /**
      * 两个小时过期时间
      */
-//    public static final Long REFRESH_EXPIRE_TIME_MILLS = 60*60*2*1000L;
-    public static final Long REFRESH_EXPIRE_TIME_MILLS = 10*2*1000L;
+    public static final Long REFRESH_EXPIRE_TIME_MILLS = 60*1000*60*2L;
 
     /**
      * 创建token

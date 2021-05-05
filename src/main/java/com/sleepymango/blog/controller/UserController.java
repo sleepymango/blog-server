@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * @Description:
@@ -32,11 +33,12 @@ public class UserController {
     @PassVerifyToken
     @PostMapping("/login")
     public Result login(String username,String password, HttpServletResponse response){
-//        String username = (String) params.get("username");
         User user = userService.findByName(username);
         if (null==user){
-
-            return new Result(ResultCode.AUTHENTICATED_NOT_LOGIN.getStatusCode(),ResultCode.AUTHENTICATED_NOT_LOGIN.getMessage(),null);
+            return new Result(ResultCode.USER_NOT_EXIST.getStatusCode(),ResultCode.USER_NOT_EXIST.getMessage(),null);
+        }
+        if (!Objects.equals(password, user.getPassword())){
+            return new Result(ResultCode.AUTHENTICATED_FAILED.getStatusCode(),ResultCode.AUTHENTICATED_FAILED.getMessage(),null);
         }
         String accessToken = JwtUtil.createAccessToken(user);
         String refreshToken = JwtUtil.createRefreshToken(user);
@@ -56,7 +58,7 @@ public class UserController {
     @GetMapping("/user")
     public Result findAll(String username) {
         User user = userService.findByName(username);
-        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(),"niubi");
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(),user.getName());
     }
 
     @GetMapping("/users/{username}")

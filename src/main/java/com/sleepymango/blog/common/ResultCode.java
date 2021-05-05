@@ -12,7 +12,9 @@ public enum ResultCode {
     // 未登录
     AUTHENTICATED_NOT_LOGIN(401,"未登录"),
     // 验证失败
-    AUTHENTICATION_FAILED(401,"验证失败，账号或密码错误"),
+    AUTHENTICATED_FAILED(401,"验证失败，账号或密码错误"),
+    // 用户不存在
+    USER_NOT_EXIST(401,"用户不存在"),
     // 登录过期
     AUTHENTICATED_EXPIRED(401,"登录过期"),
     // 没有权限

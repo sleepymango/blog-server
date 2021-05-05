@@ -127,7 +127,7 @@ public class ArticleController {
         }
 
         Article save = articleService.save(article);
-        // 将文章信息存入redis
+        // 如果文章状态为未发布，将文章信息存入redis
         if (TO_BE_RELEASED == article.getStatus()) {
             try {
                 redisDelayUtil.push(save);
