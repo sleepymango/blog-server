@@ -79,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Long sava(Category category) {
+    public Long save(Category category) {
         return categoryRepository.save(category).getId();
     }
 

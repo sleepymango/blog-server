@@ -20,7 +20,7 @@ public interface CategoryService {
 
     Category findById(Long id);
 
-    Long sava(Category category);
+    Long save(Category category);
 
     void delete(Long id);
 }

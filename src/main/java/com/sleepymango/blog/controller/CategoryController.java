@@ -54,12 +54,20 @@ public class CategoryController {
     @VerifyToken
     @PostMapping("/categories")
     public Result save(@RequestBody Category category) {
-        Long id = categoryService.sava(category);
+        Long id = categoryService.save(category);
         return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), id);
     }
 
-    @PutMapping("/category")
-    public void update() {
+    /**
+     * 编辑分类
+     * @param category
+     * @return
+     */
+    @VerifyToken
+    @PutMapping("/categories")
+    public Result update(@RequestBody Category category) {
+        Long id = categoryService.save(category);
+        return new Result(ResultCode.SUCCESS.getStatusCode(), ResultCode.SUCCESS.getMessage(), id);
     }
 
     /**
